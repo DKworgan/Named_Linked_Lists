@@ -1,19 +1,20 @@
 import { getNames } from "./randomNames.mjs";
+
 class NodeList {
 
     head;
-    counter;
+    nodeCount;
 
     constructor() {
         this.head = null;
-        this.counter = 0;
+        this.nodeCount = 0;
     }
 
     append(node) {
         //for empty linked lists
         if (this.head == null) {
             this.head = node;
-            this.counter++;
+            this.nodeCount++;
             return;
         }
 
@@ -23,18 +24,18 @@ class NodeList {
         }
 
         temp.nextNode = node;
-        this.counter++;
+        this.nodeCount++;
     }
 
     prepend(node) {
         let temp = this.head;
         this.head = node;
         this.head.nextNode = temp;
-        this.counter++;
+        this.nodeCount++;
     }
 
     size() {
-        return this.counter;
+        return this.nodeCount;
     }
 
     getHead() {
@@ -54,7 +55,7 @@ class NodeList {
     at(index) {
         let depths = this.head;
 
-        for (let i = 0; i < this.counter; i++) {
+        for (let i = 0; i < this.nodeCount; i++) {
             depths = depths.nextNode;
 
             if (index == i) {
@@ -66,18 +67,18 @@ class NodeList {
     pop() {
         let lastNode = this.head.nextNode;
 
-        for (let i = 0; i < this.counter - 3; i++) {
+        for (let i = 0; i < this.nodeCount - 3; i++) {
             lastNode = lastNode.nextNode;
         }
 
         lastNode.nextNode = null;
-        counter--;
+        nodeCount--;
     }
 
     contains(value) {
         let iterator = this.head;
 
-        for (let i = 0; i < this.counter - 1; i++) {
+        for (let i = 0; i < this.nodeCount - 1; i++) {
             if (iterator.value == value) {
                 return true;
             }
@@ -90,7 +91,7 @@ class NodeList {
     find(value) {
         let iterator = this.head;
 
-        for (let i = 0; i < this.counter; i++) {
+        for (let i = 0; i < this.nodeCount; i++) {
             if (iterator.value == value) {
                 return i;
             }
@@ -102,13 +103,11 @@ class NodeList {
     toString() {
         let iterator = this.head;
 
-        for (let i = 0; i < this.counter; i++) {
+        for (let i = 0; i < this.nodeCount; i++) {
             console.log(`Node:${i} ` + iterator.value);
             iterator = iterator.nextNode;
         }
     }
-
-
 }
 
 class Node {
@@ -123,19 +122,22 @@ class Node {
 
 let listOfNames = new NodeList();
 
-getNames().then((response) => {
-    return response.json();
-})
-    .then(
-        (result) => {
-            for (let i = 0; i < result.length; i++) {
-                listOfNames.append(new Node(result[i]));
+function populate() {
+    getNames().then((response) => {
+        return response.json();
+    })
+        .then(
+            (result) => {
+                for (let i = 0; i < result.length; i++) {
+                    listOfNames.append(new Node(result[i]));
+                }
+                process();
             }
-            process();
-        }
-    );
+        );
 
-function process() {
-    console.log(listOfNames.size());
-    listOfNames.toString();
+    function process() {
+        console.log(listOfNames.size());
+        listOfNames.toString();
+    }
 }
+populate();
