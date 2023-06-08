@@ -1,4 +1,4 @@
-import { arr } from "./randomNames.mjs";
+import { getNames } from "./randomNames.mjs";
 class NodeList {
 
     head;
@@ -103,7 +103,7 @@ class NodeList {
         let iterator = this.head;
 
         for (let i = 0; i < this.counter; i++) {
-            console.log("value: " + iterator.value);
+            console.log(`Node:${i} ` + iterator.value);
             iterator = iterator.nextNode;
         }
     }
@@ -121,11 +121,21 @@ class Node {
     }
 }
 
-let list = new NodeList();
-list.append(new Node(1));
-list.append(new Node(2));
-list.append(new Node(3));
-list.append(new Node(4));
-list.prepend(new Node(-1));
+let listOfNames = new NodeList();
 
-list.toString();
+getNames().then((response) => {
+    return response.json();
+})
+    .then(
+        (result) => {
+            for (let i = 0; i < result.length; i++) {
+                listOfNames.append(new Node(result[i]));
+            }
+            process();
+        }
+    );
+
+function process() {
+    console.log(listOfNames.size());
+    listOfNames.toString();
+}
